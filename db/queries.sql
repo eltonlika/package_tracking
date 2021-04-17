@@ -1,6 +1,6 @@
 -- :name create_table_package
 create table if not exists package (
-    tracking_number     text    primary key,
+    tracking_number     text    not null primary key,
     package_name        text,
     in_progress         integer not null default 1,
     last_checked        text,
@@ -9,7 +9,7 @@ create table if not exists package (
 
 -- :name create_table_package_event
 create table if not exists package_event (
-    event_id            integer primary key,
+    event_id            integer not null primary key,
     tracking_number     text    not null,
     event_datetime      text    not null,
     event_description   text    not null,
@@ -21,6 +21,7 @@ create table if not exists package_event (
 create table if not exists package_subscription (
     tracking_number     text    not null,
     subscriber_id       text    not null,
+    last_sent_event_id  integer not null default -1,
     added               text    not null default current_timestamp
 )
 
