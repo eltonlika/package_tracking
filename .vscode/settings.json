@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "/Users/elika/.local/share/virtualenvs/package_tracking-__EJFtqr/bin/python",
+    "python.analysis.extraPaths": [
+        "./src"
+    ]
+}
