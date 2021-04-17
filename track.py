@@ -1,5 +1,5 @@
 from sys import argv
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 
 from package.trackers.multi_tracker import MultiTracker
 from package.trackers.cainiao import CainiaoTracker
@@ -11,17 +11,17 @@ from db import connect
 db = connect("sqlite:///:memory:")
 
 
-print(db.insert_package(tracking_number='RB069131513SG',
-                        package_name='inner tubes',
-                        last_checked=None))
+db.insert_package(tracking_number='RB069131513SG',
+                  package_name='inner tubes',
+                  last_checked=None)
 
-print(db.insert_package(tracking_number='RB083371157SG',
-                        package_name='usb-c hub',
-                        last_checked=None))
+db.insert_package(tracking_number='RB083371157SG',
+                  package_name='usb-c hub',
+                  last_checked=None)
 
-print(db.insert_package(tracking_number='UA002876183FR',
-                        package_name='dielectric',
-                        last_checked=None))
+db.insert_package(tracking_number='UA002876183FR',
+                  package_name='dielectric',
+                  last_checked=None)
 
 
 def tracking_numbers():

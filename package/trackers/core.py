@@ -27,7 +27,7 @@ class PackageEvent:
             and self.__is_same_description__(other)
 
     def __repr__(self) -> str:
-        return f'{self.event_datetime.strftime("%Y-%m-%d %H:%M:%S")}  {self.event_description}'
+        return f'{self.event_datetime.strftime("%Y-%m-%d %H:%M:%S")} {self.event_description}'
 
 
 class TrackerInterface(ABC):
