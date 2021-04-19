@@ -7,6 +7,7 @@ name = "pypi"
 requests = "*"
 beautifulsoup4 = "*"
 pugsql = "*"
+python-telegram-bot = "*"
 
 [dev-packages]
 autopep8 = "*"

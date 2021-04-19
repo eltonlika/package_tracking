@@ -1,7 +1,6 @@
 -- :name create_table_package
 create table if not exists package (
     tracking_number     text    not null primary key,
-    package_name        text,
     in_progress         integer not null default 1,
     last_checked        text,
     added               text    not null default current_timestamp
@@ -14,7 +13,8 @@ create table if not exists package_event (
     event_datetime      text    not null,
     event_description   text    not null,
     is_delivery_event   integer not null default 0,
-    added               text    not null default current_timestamp
+    added               text    not null default current_timestamp,
+    unique (tracking_number, event_id)
 )
 
 -- :name create_table_package_subscription
@@ -22,7 +22,9 @@ create table if not exists package_subscription (
     tracking_number     text    not null,
     subscriber_id       text    not null,
     last_sent_event_id  integer not null default -1,
-    added               text    not null default current_timestamp
+    package_name        text,
+    added               text    not null default current_timestamp,
+    primary key (tracking_number, subscriber_id)
 )
 
 
@@ -38,12 +40,7 @@ select p.*
  order by p.last_checked asc
 
 -- :name insert_package :insert
-insert into package (
-    tracking_number,
-    package_name)
-values (
-    :tracking_number,
-    :package_name)
+insert into package (tracking_number) values (:tracking_number)
 
 -- :name update_package_progress :affected
 update package p
@@ -86,12 +83,32 @@ select s.*
 -- :name subscribe :insert
 insert into package_subscription (
     tracking_number,
-    subscriber_id)
+    subscriber_id,
+    package_name)
 values (
     :tracking_number,
-    :subscriber_id)
+    :subscriber_id,
+    :package_name)
 
 -- :name unsubscribe :affected
 delete from package_subscription s
  where s.tracking_number = :tracking_number
    and s.subscriber_id   = :subscriber_id
+
+-- :name update_subscriber_notified :affected
+update package_subscription p
+   set p.last_sent_event_id = :last_sent_event_id
+ where p.tracking_number = :tracking_number
+   and p.subscriber_id = :subscriber_id
+
+
+-- :name get_events_to_notify :many
+select s.subscriber_id,
+       s.package_name,
+       e.event_datetime,
+       e.event_description
+  from package_subscription s, package_event e
+ where s.tracking_number = e.tracking_number
+   and e.event_id > s.last_sent_event_id
+  order by s.tracking_number asc, s.subscriber_id asc, e.event_id desc
+  limit 30

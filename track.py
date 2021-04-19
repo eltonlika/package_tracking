@@ -7,7 +7,6 @@ from package.trackers.albanian_post import AlbanianPostTracker
 
 from db import connect
 
-
 db = connect("sqlite:///:memory:")
 
 
