@@ -30,7 +30,7 @@ def tracking_numbers():
         return
 
     for pkg in db.get_active_packages():
-        yield (pkg['tracking_number'], pkg['package_name'])
+        yield pkg['tracking_number']
 
 
 def main():
@@ -39,11 +39,11 @@ def main():
                                AlbanianPostTracker(),
                                CainiaoTracker())
 
-        nums = [(num, name, executor.submit(tracker.track, num))
-                for num, name in tracking_numbers()]
+        nums = [(num, executor.submit(tracker.track, num))
+                for num in tracking_numbers()]
 
-        for num, name, future in nums:
-            print(f'[ {num} {name} ]')
+        for num, future in nums:
+            print(f'[ {num} ]')
             for e in future.result():
                 print(e)
             print()
